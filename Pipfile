@@ -11,6 +11,8 @@ python-dotenv = "*"
 langchain-tools = "*"
 langchain-experimental = "*"
 tabulate = "*"
+streamlit = "*"
+fastapi = "*"
 
 [dev-packages]
 ipykernel = "*"
