@@ -1,3 +1,6 @@
+import sys
+sys.path.append(r'C:\Users\RodrigoPintoMesquita\Documents\GitHub\DR3_AT')
+
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
@@ -8,7 +11,7 @@ from langchain.agents import Tool
 from langchain.tools import tool
 from langchain import hub
 from langchain.agents import AgentExecutor, create_react_agent
-
+from app.services.back_main import *
 
 load_dotenv()
 
@@ -103,11 +106,12 @@ def match_stats(df: pd.DataFrame, user_input: str) -> str:
     return response
 
 
-def create_tools(df, user_input):
+    
+def create_tools(match_id, home_team, away_team, user_input, df):
     return [
         Tool(
             #O nome do prompt não condiz com o conteúdo, pois não estou conseguindo trocar o nome do meu projeto no LangSmith.
-            name="musicindustrysearch/match_summarizer",
+            name="match_summarizer",
             func=lambda x="": match_summarizer(df), 
             description="Creates narrative summaries about the match."
         ),
@@ -115,13 +119,18 @@ def create_tools(df, user_input):
             name="match_stats", 
             func=lambda  x="": match_stats(df, user_input),  
             description="Provides statistical data about the match, teams, and players. Example: Number of saves, goals, shots on goal, etc."
+        ),
+        Tool(
+            name="match_lineup", 
+            func= lambda x="": get_lineup(match_id, home_team, away_team),
+            description="Provides the escalation for the match, also know as lineup. The lineup is a list of players that had participated in the match."
         )
     ]
      
 
 
-def invoke_agent(df, user_input, llm_tone):
-    tools = create_tools(df, user_input)
+def invoke_agent(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str, df: pd.DataFrame):
+    tools = create_tools(match_id, home_team, away_team, user_input, df)
 
     prompt = hub.pull("musicindustrysearch/react")
     
@@ -137,7 +146,7 @@ def invoke_agent(df, user_input, llm_tone):
 
 
 
-def main_llm(user_input, df, llm_tone) -> str:
+def main_llm(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str, df_main_events: pd.DataFrame) -> str:
 
     map_llm_tone = {
     "Formal" : "formal (technical and objective)",
@@ -148,6 +157,14 @@ def main_llm(user_input, df, llm_tone) -> str:
 
     llm_tone = map_llm_tone.get(llm_tone, "Formal") 
 
-    agent = invoke_agent(df,user_input, llm_tone)
+    agent = invoke_agent(
+        match_id = match_id, 
+        home_team = home_team,
+        away_team = away_team,
+        llm_tone = llm_tone,
+        user_input = user_input, 
+        df = df_main_events
+        )
+    
     response = agent({"input": user_input})
     return response['output']

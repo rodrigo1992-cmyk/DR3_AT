@@ -13,6 +13,7 @@ langchain-experimental = "*"
 tabulate = "*"
 streamlit = "*"
 fastapi = "*"
+seaborn = "*"
 
 [dev-packages]
 ipykernel = "*"

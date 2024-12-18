@@ -1,7 +1,8 @@
-
 import pandas as pd
+from statsbombpy import sb
+import json
 
-def df_events_pre_processing(df_events: pd.DataFrame) -> pd.DataFrame:
+def df_main_events_pre_processing(df_events: pd.DataFrame) -> pd.DataFrame:
     '''
     Função que recebe um DataFrame de eventos de uma partida e retorna um DataFrame com os eventos principais da partida.[Gols, assistências, cartões, etc.]
 
@@ -61,5 +62,24 @@ def df_events_pre_processing(df_events: pd.DataFrame) -> pd.DataFrame:
     df_main_events = X[['match_period','team','player','play']]
 
     return df_main_events
+
+
+def get_lineup(match_id: int, home_team: str, away_team: str) -> str:
+    df_home = sb.lineups(match_id)[home_team]
+    df_away = sb.lineups(match_id)[away_team]
+
+    df_home['team'] = home_team
+    df_away['team'] = away_team
+
+    df_lineup = pd.concat([df_home, df_away])
+    df_lineup = df_lineup[['team', 'player_name']]
+
+    lineup_dict = {
+        home_team: df_lineup[df_lineup['team'] == home_team]['player_name'].tolist(),
+        away_team: df_lineup[df_lineup['team'] == away_team]['player_name'].tolist()
+    }
+
+    # Convertendo o dicionário para uma string
+    return json.dumps(lineup_dict) 
 
 

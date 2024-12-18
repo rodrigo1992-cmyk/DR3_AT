@@ -21,3 +21,14 @@ class llmtoneBM(str, Enum):
     Technical = "Technical"
 
 
+class mainEventsBM(BaseModel):
+    match_period: str
+    team: str
+    player: str
+    play: str
+
+class eventsBM(BaseModel):
+    team: str
+    period: str
+    player: str = None
+    outcome: str 
