@@ -29,11 +29,11 @@ async def matches(competition_id: int, season_id: int):
 
 
 @app.get("/matchanalysis/{match_id}/{llm_tone}", response_model=str)
-async def matchanalysis(match_id: int, llm_tone: llmtoneBM):
+async def matchanalysis(match_id: int, llm_tone: llmtoneBM, user_input: str):
     df = sb.events(match_id = match_id)
 
     df_main_events = df_events_pre_processing(df)
-    response = invoke_lmms_match_analysis(df_main_events, llm_tone)
+    response = main_llm(user_input = user_input, df = df_main_events, llm_tone = llm_tone)
 
     return response
 

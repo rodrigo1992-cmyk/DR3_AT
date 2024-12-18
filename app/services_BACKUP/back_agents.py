@@ -14,7 +14,7 @@ load_dotenv()
 
 google_api_key = os.getenv('GOOGLE_API_KEY')
 
-def half_summarizer(df: pd.DataFrame, half: str) -> tuple:
+def agent_half_analyses(df: pd.DataFrame, half: str) -> tuple:
     ''' 
     Cria um agente para analisar um tempo da partida.
 
@@ -35,36 +35,78 @@ def half_summarizer(df: pd.DataFrame, half: str) -> tuple:
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=google_api_key)
 
     df = df[df['match_period'] == half]
-    agent = create_pandas_dataframe_agent(llm, df, verbose=True, allow_dangerous_code = True, return_intermediate_steps=True)
+    agent = create_pandas_dataframe_agent(llm, df, verbose=True, allow_dangerous_code = True)
 
     return agent, prompt
 
+def match_summarizer(first_half_analysis: str, second_half_analysis: str, llm_tone: str) -> str:
+    '''
+    Gera um resumo final da partida, condensando os resumos de cada tempo.
 
+    Args:
+    first_half_analysis: Resumo gerado por LLM para o primeiro tempo da partida.
+    second_half_analysis: Resumo gerado por LLM para o segundo tempo da partida.
+    '''
 
-def match_summarizer(df: pd.DataFrame) -> str:
+    map_llm_tone = {
+        "Formal" : "formal (técnico e objetivo)",
+        "Empolgado" :  "empolgado (vibrante, comemorativo)",
+        "Humorístico" : "humorístico (descontraído e criativo)",
+        "Técnico" : "técnico (análise detalhada dos eventos)"
+    }
+
+    mapped_tone = map_llm_tone.get(llm_tone, "Formal") 
+
+    prompt_final = f"""
+    Como um narrador de futebol, analise os resumos de cada tempo da partida e condense em um resumo final. Siga as instruções abaixo:
+        1. Você está contando a análise via chat, sobre uma partida antiga. Utilize um tom {mapped_tone}
+        2. Os resumos estão em inglês, porém você deve responder em português.
+        3. Deixe claro quais eventos foram do primeiro e do segundo tempo.
+        4. É obrigatório citar cada gol e se foram feitos por penalti.
+        5. Cite os jogadores e times envolvidos em cada jogada.
+        6. O placar final corresponde à soma do placar de cada tempo da partida.
+        7. Finalize o resumo citando o placar final da partida.
+        8. Utilize formatação markdown na resposta
+
+    Resumo Primeiro tempo:
+    {first_half_analysis}
+
+    Resumo Segundo tempo:
+    {second_half_analysis}
+    """
+
+    genai.configure(api_key=os.getenv('GEMINI_KEY'))
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt_final)
+
+    return response.text
+
+def invoke_lmms_match_summary(df: pd.DataFrame) -> str:
     '''Invoca Agentes para analisar cada tempo da partida de forma separada e depois gera um resumo final
 
     Args:
     df: DataFrame com os eventos principais da partida, já filtrado e com tratamento dos labels dos eventos.
     '''
 
-    agent,prompt = half_summarizer(df, 'first half')
+    agent,prompt = agent_half_analyses(df, 'first half')
     first_half_analysis = agent.invoke(prompt)
     first_half_analysis = first_half_analysis['output']
 
-    agent,prompt = half_summarizer(df, 'second half')
+    agent,prompt = agent_half_analyses(df, 'second half')
     second_half_analysis = agent.invoke(prompt)
     second_half_analysis = second_half_analysis['output']
 
-    match_analyses = "\nObservation: "+ "ANALYSES FIRST HALF: \n" + first_half_analysis + "\nANALYSES SECOND HALF: \n" +second_half_analysis + "\n"
+    match_analyses = "ANALYSES FIRST HALF: \n" + first_half_analysis + "ANALYSES SECOND HALF: \n" +second_half_analysis
+
     return match_analyses
 
-def match_stats(df: pd.DataFrame, user_input: str) -> str:
+def agent_match_stats(df: pd.DataFrame, user_input: str) -> str:
     
     prompt = f"""
-        Analyze the dataframe to answer: {user_input}
+        Analyze the dataframe to answer questions about soccer matches. 
+        You need to answer the question {user_input}.
         Firts, check if the event, team name, or player name is present in the dataset, creating a list of unique values of related column, if not, answer with the available options in the dataset.
-        Please provide a complete and detailed response. For example, if the question is 'Which player scored the most goals in the match?', I would like you to respond with something like 'The player who scored the most goals in the match was Ronaldo Gaucho.
+        Give the answer in portuguese.
 
         The provided Dataframe has the following fields:
             -match_period: Indication of the period of the game in which the play was made
@@ -97,41 +139,37 @@ def match_stats(df: pd.DataFrame, user_input: str) -> str:
 
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=google_api_key)
 
-    agent = create_pandas_dataframe_agent(llm, df, verbose=True, allow_dangerous_code = True, number_of_head_rows=200, return_intermediate_steps=True)
+    agent = create_pandas_dataframe_agent(llm, df, verbose=True, allow_dangerous_code = True, number_of_head_rows=20)
+
     response = agent.invoke(prompt)
-    response = "\nObservation: "+ response['output']
-    return response
+    return response['output']
 
 
-def create_tools(df, user_input):
+def create_tools(df):
     return [
         Tool(
-            #O nome do prompt não condiz com o conteúdo, pois não estou conseguindo trocar o nome do meu projeto no LangSmith.
-            name="musicindustrysearch/match_summarizer",
-            func=lambda x="": match_summarizer(df), 
-            description="Creates narrative summaries about the match."
+            name="invoke_lmms_match_summary",
+            func=lambda: invoke_lmms_match_summary(df),  # Usando lambda para passar o df
+            description="Cria resumos narrativos sobre a partida."
         ),
         Tool(
-            name="match_stats", 
-            func=lambda  x="": match_stats(df, user_input),  
-            description="Provides statistical data about the match, teams, and players. Example: Number of saves, goals, shots on goal, etc."
+            name="agent_match_stats", 
+            func=lambda: agent_match_stats(df),  # Usando lambda para passar o df
+            description="Fornece dados estatísticos sobre a partida, sobre os times ou sobre os jogadores. Exemplo: Quantidade de defesas, gols, chutes a gol, etc."
         )
     ]
-     
 
 
-def invoke_agent(df, user_input, llm_tone):
-    tools = create_tools(df, user_input)
 
-    prompt = hub.pull("musicindustrysearch/react")
-    
+def invoke_agent(df, llm_tone):
+    tools = create_tools(df, llm_tone)
+
     agent = create_react_agent(
         llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0.7), 
         tools = tools, 
-        prompt = prompt.partial(llm_tone=llm_tone)
-    )
-    
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, max_turns=2, return_intermediate_steps=True, max_iterations=20)
+        prompt = hub.pull("hwchase17/react")
+        )
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, max_turns=3)
     
     return agent_executor
 
@@ -139,15 +177,6 @@ def invoke_agent(df, user_input, llm_tone):
 
 def main_llm(user_input, df, llm_tone) -> str:
 
-    map_llm_tone = {
-    "Formal" : "formal (technical and objective)",
-    "Excited" :  "excited (vibrant, celebratory)",
-    "Humorous" : "humorous (relaxed and creative)",
-    "Technical" : "technical (detailed analysis of events)"
-    }
-
-    llm_tone = map_llm_tone.get(llm_tone, "Formal") 
-
-    agent = invoke_agent(df,user_input, llm_tone)
+    agent = invoke_agent(df, llm_tone)
     response = agent({"input": user_input})
-    return response['output']
+    return response 

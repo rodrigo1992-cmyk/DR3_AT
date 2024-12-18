@@ -38,7 +38,7 @@ def add_styling():
 
 
 def getCompetitions():
-    with st.spinner("Loading..."):
+    with st.spinner("Carregando..."):
         response = requests.get("http://localhost:8000/competitions")
         response.raise_for_status()
     
@@ -47,17 +47,17 @@ def getCompetitions():
         return df
     
     else:
-        st.error("Error retrieving data from API competitions: {}".format(response.status_code))
+        st.error("Erro ao acessar a API /competitions: {}".format(response.status_code))
 
 
 def filterCompetion(df_comp):
 
     #Crio a lista de campeonatos
     list_comp = df_comp['competition_name'].drop_duplicates().tolist()
-    list_comp.insert(0, 'Select')
+    list_comp.insert(0, 'Selecione')
 
     #Crio o Seletor
-    competition = st.sidebar.selectbox('Competition', list_comp, key='1')
+    competition = st.sidebar.selectbox('Filtrar Campeonato', list_comp, key='1')
 
     df_comp_filt = df_comp.loc[df_comp['competition_name'] == competition]
 
@@ -68,9 +68,9 @@ def filterYear(df_comp_filt):
 
     #lista dos anos
     list_year = df_comp_filt['season_name'].drop_duplicates().tolist()
-    list_year.insert(0, 'Select')
+    list_year.insert(0, 'Selecione')
     #seletor de ano
-    year = st.sidebar.selectbox('Season', list_year)
+    year = st.sidebar.selectbox('Filtrar Temporada', list_year)
 
     df_comp_filt_year = df_comp_filt.loc[df_comp_filt['season_name'] == year]
     
@@ -83,7 +83,7 @@ def getMatches(df_comp_filt_year):
     competition_id = df_comp_filt_year['competition_id'].values[0]  
     season_id = df_comp_filt_year['season_id'].values[0]
 
-    with st.spinner("Wait..."):
+    with st.spinner("Carregando..."):
         response = requests.get(f"http://localhost:8000/matches/{competition_id}/{season_id}")
         response.raise_for_status()
     
@@ -92,7 +92,7 @@ def getMatches(df_comp_filt_year):
         return df_matches
     
     else:
-        st.error("Error retrieving data from API Matches: {}".format(response.status_code))
+        st.error("Erro ao acessar a API /matches: {}".format(response.status_code))
 
 
 def filterMatch(df_matches):
@@ -100,34 +100,32 @@ def filterMatch(df_matches):
     #lista das partidas
     df_matches['partida'] = df_matches['home_team'] + ' x ' + df_matches['away_team']
     list_matches = df_matches['partida'].drop_duplicates().tolist()
-    list_matches.insert(0, 'Select')
+    list_matches.insert(0, 'Selecione')
 
     #seletor de partidas
-    match = st.sidebar.selectbox('Match', list_matches)
+    match = st.sidebar.selectbox('Filtrar Partida', list_matches)
     df_matches_filt = df_matches.loc[df_matches['partida'] == match]
     
     return df_matches_filt, match
 
 
-def getMatchAnalysis(df_matches_filt, llm_tone, user_input):
+def getMatchAnalysis(df_matches_filt, llm_tone):
 
-    match_id=df_matches_filt['match_id'].values[0]
-
-    url = f"http://localhost:8000/matchanalysis/{match_id}/{llm_tone}"
-    params = {"user_input": user_input}
-    response = requests.get(url, params=params)
-    response.raise_for_status()
+    with st.spinner("Aguarde alguns instantes, a análise está sendo processada..."):
+        match_id=df_matches_filt['match_id'].values[0]
+        response = requests.get(f"http://localhost:8000/matchanalysis/{match_id}/{llm_tone}")
+        response.raise_for_status()
     
     if response.status_code == 200:
         return response.json()
     
     else:
-        st.error("Error retrieving data from API matchanalysis: {}".format(response.status_code))
+        st.error("Erro ao acessar a API /matchanalysis: {}".format(response.status_code))
 
 
 def select_llm_tone():
     add_styling()
-    llm_tone = st.radio("Select", ["Formal", "Excited", "Humorous", "Technical"], label_visibility="collapsed")
+    llm_tone = st.radio("Selecione", ["Formal", "Empolgado", "Humorístico", "Técnico"], label_visibility="collapsed")
 
     return llm_tone
         

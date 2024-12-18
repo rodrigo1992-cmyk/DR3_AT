@@ -16,6 +16,8 @@ class matchesBM(BaseModel):
 
 class llmtoneBM(str, Enum):
     Formal = "Formal"
-    Empolgado = "Empolgado"
-    Humorístico = "Humorístico"
-    Técnico = "Técnico"
+    Excited = "Excited"
+    Humorous = "Humorous"
+    Technical = "Technical"
+
+
