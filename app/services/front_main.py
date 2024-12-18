@@ -64,7 +64,7 @@ if competition != 'Select' and year != 'Select':
 #Só mostra o filtro de Partida depois que o Ano e Campeonato são Selecionados    
 if competition != 'Select' and year != 'Select':
     st.session_state.df_matches_filt, st.session_state.match_temp = filterMatch(st.session_state.df_matches)
-    st.session_state.df_events = getEvents(st.session_state.match_id)
+    st.session_state.df_events = getPlayerProfile(st.session_state.match_id)
 
 
 #-----------------TROCA DE PÁGINAS------------------

@@ -139,10 +139,10 @@ def select_llm_tone():
     return llm_tone
         
 
-def getEvents(match_id):
+def getPlayerProfile(match_id):
 
     with st.spinner("Wait..."):
-        response = requests.get(f"http://localhost:8000/events/{match_id}")
+        response = requests.get(f"http://localhost:8000/player_profile/{match_id}")
         response.raise_for_status()
 
     if response.status_code == 200:

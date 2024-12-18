@@ -46,7 +46,7 @@ async def matchanalysis(match_id: int, home_team: str, away_team: str, llm_tone:
 
     return response
 
-@app.get("/events/{match_id}", response_model=List[eventsBM])
+@app.get("/player_profile/{match_id}", response_model=List[eventsBM])
 async def events(match_id: int):
 
     df_events = sb.events(match_id = match_id)
