@@ -107,7 +107,21 @@ def match_stats(df: pd.DataFrame, user_input: str) -> str:
 
 
     
-def create_tools(match_id, home_team, away_team, user_input, df):
+def create_tools(match_id: int, home_team: str, away_team: str, user_input: str, df: pd.DataFrame) -> list:
+    '''
+    Cria ferramentas para serem utilizadas pelo agente reAct.
+
+    Args:
+    match_id: ID da partida.
+    home_team: Nome do time mandante.
+    away_team: Nome do time visitante.
+    user_input: Pergunta do usuário.
+    df: DataFrame com os eventos da partida.
+
+    Returns: Lista de ferramentas.
+    '''
+
+
     return [
         Tool(
             #O nome do prompt não condiz com o conteúdo, pois não estou conseguindo trocar o nome do meu projeto no LangSmith.
@@ -129,7 +143,21 @@ def create_tools(match_id, home_team, away_team, user_input, df):
      
 
 
-def invoke_agent(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str, df: pd.DataFrame):
+def instance_agent(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str, df: pd.DataFrame):
+    '''
+    Cria um agente reAct consolidar as respostas dos demais agentes ou tools e aplicar o TOM narrativo selecionado pelo usuário.
+
+    Args:
+    match_id: ID da partida.
+    home_team: Nome do time mandante.
+    away_team: Nome do time visitante.
+    llm_tone: Tom da linguagem do modelo de linguagem.
+    user_input: Pergunta do usuário.
+    df: DataFrame com os eventos da partida.
+
+    Returns: Agente reAct instanciado.
+    
+    '''
     tools = create_tools(match_id, home_team, away_team, user_input, df)
 
     prompt = hub.pull("musicindustrysearch/react")
@@ -147,6 +175,19 @@ def invoke_agent(match_id: int, home_team: str, away_team: str, llm_tone: str, u
 
 
 def main_llm(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str, df_main_events: pd.DataFrame) -> str:
+    '''
+    Chama um agente para analisar os eventos da partida.
+
+    Args:
+    match_id: ID da partida.
+    home_team: Nome do time mandante.
+    away_team: Nome do time visitante.
+    llm_tone: Tom da linguagem do modelo de linguagem.
+    user_input: Pergunta do usuário.
+    df_main_events: DataFrame com os eventos da partida.
+
+    Returns: String com a resposta do modelo LLM.
+    '''
 
     map_llm_tone = {
     "Formal" : "formal (technical and objective)",
@@ -157,7 +198,7 @@ def main_llm(match_id: int, home_team: str, away_team: str, llm_tone: str, user_
 
     llm_tone = map_llm_tone.get(llm_tone, "Formal") 
 
-    agent = invoke_agent(
+    agent = instance_agent(
         match_id = match_id, 
         home_team = home_team,
         away_team = away_team,

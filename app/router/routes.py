@@ -14,6 +14,13 @@ app = FastAPI()
 
 @app.get("/competitions", response_model=List[competitionsBM])
 async def get_competitions():
+    '''
+    Get all competitions and seasons available in StatsBomb API
+    
+    Returns:
+    dict: List of dictionaries with competition_name, season_name, competition_id, season_id
+    '''
+
     df = sb.competitions()
     df = df[['competition_name', 'season_name', 'competition_id', 'season_id']]
     dict = df.to_dict(orient='records')
@@ -22,6 +29,17 @@ async def get_competitions():
 
 @app.get("/matches/{competition_id}/{season_id}", response_model=List[matchesBM])
 async def matches(competition_id: int, season_id: int):
+    '''
+    Get all matches available in StatsBomb API for a given competition and season
+    
+    Args:
+    competition_id (int): Competition ID
+    season_id (int): Season ID
+    
+    Returns:
+    dict: List of dictionaries with match_id, home_team, away_team
+    '''
+
     df = sb.matches(competition_id = competition_id, season_id = season_id)
     df = df[['match_id', 'home_team', 'away_team']]
     dict = df.to_dict(orient='records')
@@ -30,6 +48,20 @@ async def matches(competition_id: int, season_id: int):
 
 @app.get("/matchanalysis", response_model=str)
 async def matchanalysis(match_id: int, home_team: str, away_team: str, llm_tone: llmtoneBM, user_input: str):
+    '''
+    Get the match analysis for a given match
+    
+    Args:
+    match_id (int): Match ID
+    home_team (str): Home Team
+    away_team (str): Away Team
+    llm_tone (llmtoneBM): Tone of the match
+    user_input (str): User input
+    
+    Returns:
+    str: Match analysis
+    '''
+
     df = sb.events(match_id = match_id)
 
     df_main_events = df_main_events_pre_processing(df)
@@ -47,7 +79,18 @@ async def matchanalysis(match_id: int, home_team: str, away_team: str, llm_tone:
     return response
 
 @app.get("/player_profile/{match_id}", response_model=List[eventsBM])
-async def events(match_id: int):
+async def player_profile(match_id: int):
+    '''
+    Get the player profile for a given match
+
+    Args:
+    match_id (int): Match ID
+
+    Returns:
+    dict: List of dictionaries with team, period, player, outcome
+    '''
+    
+
 
     df_events = sb.events(match_id = match_id)
     

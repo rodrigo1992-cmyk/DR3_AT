@@ -79,7 +79,7 @@ def get_lineup(match_id: int, home_team: str, away_team: str) -> str:
         away_team: df_lineup[df_lineup['team'] == away_team]['player_name'].tolist()
     }
 
-    # Convertendo o dicionário para uma string
+    
     return json.dumps(lineup_dict) 
 
 

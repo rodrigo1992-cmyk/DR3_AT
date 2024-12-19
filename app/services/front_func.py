@@ -38,7 +38,13 @@ def add_styling():
     """)
 
 
-def getCompetitions():
+def getCompetitions() -> pd.DataFrame:
+    '''
+    Função que retorna o dataset de competições
+
+    Returns:
+    df: DataFrame - Dataset de competições
+    '''
     with st.spinner("Loading..."):
         response = requests.get("http://localhost:8000/competitions")
         response.raise_for_status()
@@ -51,7 +57,17 @@ def getCompetitions():
         st.error("Error retrieving data from API competitions: {}".format(response.status_code))
 
 
-def filterCompetion(df_comp):
+def filterCompetion(df_comp: pd.DataFrame):
+    '''
+    Função que filtra o dataset de competições
+    
+    Args:
+    df_comp: DataFrame - Dataset de competições
+    
+    Returns:
+    df_comp_filt: DataFrame - Dataset de competições filtrado
+    competition: str - Nome do campeonato selecionado
+    '''
 
     #Crio a lista de campeonatos
     list_comp = df_comp['competition_name'].drop_duplicates().tolist()
@@ -65,7 +81,18 @@ def filterCompetion(df_comp):
     return df_comp_filt, competition
 
 
-def filterYear(df_comp_filt):
+def filterYear(df_comp_filt: pd.DataFrame) :
+    '''
+    Função que filtra o dataset de competições por ano
+    
+    Args:
+    df_comp_filt: DataFrame - Dataset de competições filtrado
+    
+    Returns:
+    df_comp_filt_year: DataFrame - Dataset de competições filtrado por ano
+    year: str - Ano selecionado
+    '''
+
 
     #lista dos anos
     list_year = df_comp_filt['season_name'].drop_duplicates().tolist()
@@ -78,7 +105,17 @@ def filterYear(df_comp_filt):
     return df_comp_filt_year, year
 
 
-def getMatches(df_comp_filt_year):
+def getMatches(df_comp_filt_year: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Função que retorna o dataset de partidas
+
+    Args:
+    df_comp_filt_year: DataFrame - Dataset de competições filtrado por ano
+
+    Returns:
+    df_matches: DataFrame - Dataset de partidas
+    '''
+
 
     #Obtem o Dataset Partidas passando como parâmetro o id do campeonato e o id da temporada  
     competition_id = df_comp_filt_year['competition_id'].values[0]  
@@ -97,7 +134,18 @@ def getMatches(df_comp_filt_year):
         st.error("Error retrieving data from API Matches: {}".format(response.status_code))
 
 
-def filterMatch(df_matches):
+def filterMatch(df_matches: pd.DataFrame):
+    '''
+    Função que filtra o dataset de partidas
+    
+    Args:
+    df_matches: DataFrame - Dataset de partidas
+    
+    Returns:
+    df_matches_filt: DataFrame - Dataset de partidas filtrado
+    match: str - Partida selecionada
+    '''
+
     add_styling()
     #lista das partidas
     df_matches['partida'] = df_matches['home_team'] + ' x ' + df_matches['away_team']
@@ -111,7 +159,21 @@ def filterMatch(df_matches):
     return df_matches_filt, match
 
 
-def getMatchAnalysis(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str):
+def getMatchAnalysis(match_id: int, home_team: str, away_team: str, llm_tone: str, user_input: str) -> dict:
+    '''
+    Função que retorna a análise da partida
+    
+    Args:
+    match_id: int - Id da partida
+    home_team: str - Time da casa
+    away_team: str - Time visitante
+    llm_tone: str - Tom do LLM
+    user_input: str - Input do usuário
+    
+    Returns:
+    response.json(): dict - Análise da partida
+    
+    '''
 
     url = f"http://localhost:8000/matchanalysis"
     params = {
@@ -133,13 +195,28 @@ def getMatchAnalysis(match_id: int, home_team: str, away_team: str, llm_tone: st
 
 
 def select_llm_tone():
+    '''
+    Função que cria o seletor de tom narrativo para o LLM
+    
+    Returns:
+    llm_tone: str - Tom do LLM
+    '''
     add_styling()
     llm_tone = st.radio("Select", ["Formal", "Excited", "Humorous", "Technical"], label_visibility="collapsed")
 
     return llm_tone
         
 
-def getPlayerProfile(match_id):
+def getPlayerProfile(match_id: int) -> pd.DataFrame:
+    '''
+    Função que retorna o perfil dos jogadores
+
+    Args:
+    match_id: int - Id da partida
+
+    Returns:
+    df_events: DataFrame - Dataset de eventos
+    '''
 
     with st.spinner("Wait..."):
         response = requests.get(f"http://localhost:8000/player_profile/{match_id}")
@@ -155,7 +232,17 @@ def getPlayerProfile(match_id):
 
 
 
-def dash_events_per_period(df):
+def dash_events_per_period(df: pd.DataFrame) -> plt.Figure:
+    '''
+    Função que cria o gráfico de eventos por período da partida
+
+    Args:
+    df: DataFrame - Dataset de eventos
+
+    Returns:
+    fig: Figure - Gráfico de eventos por período
+    
+    '''
     options = df['period'].unique()
     options = ['whole match'] + options.tolist()
     period = st.selectbox('Select the Period', options)
@@ -180,7 +267,19 @@ def dash_events_per_period(df):
 
     return fig
 
-def dash_events_per_team(df):
+def dash_events_per_team(df: pd.DataFrame) -> plt.Figure:
+    '''
+    Função que cria o gráfico de eventos por time da partida
+
+    Args:
+    df: DataFrame - Dataset de eventos
+
+    Returns:
+    fig: Figure - Gráfico de eventos por time
+
+    '''
+
+
     options = df['team'].unique()
     options = ['Both teams'] + options.tolist()
     team = st.selectbox('Select the Team', options)
@@ -206,7 +305,17 @@ def dash_events_per_team(df):
     return fig
 
 
-def show_df_events(df_events):
+def show_df_events(df_events: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Função que cria filtros para o dataset de eventos e retorna o dataset filtrado
+
+    Args:
+    df_events: DataFrame - Dataset de eventos
+
+    Returns:
+    df: DataFrame - Dataset de eventos filtrado
+    '''
+
 
     df = df_events.groupby(['team', 'period', 'player', 'outcome']).size().reset_index(name='qty')
     
@@ -225,7 +334,17 @@ def show_df_events(df_events):
 
     return df
 
-def dash_player_comparison(df_eventos, jogadorA,jogadorB):
+def dash_player_comparison(df_eventos: pd.DataFrame, jogadorA: str, jogadorB: str):
+    '''
+    Função que cria visuais de métricas para comparação de dois jogadores
+
+    Args:
+    df_eventos: DataFrame - Dataset de eventos
+    jogadorA: str - Nome do jogador A
+    jogadorB: str - Nome do jogador B
+
+    '''
+
 
     df_jogadorA = df_eventos[df_eventos['player'] == jogadorA]
     df_jogadorB = df_eventos[df_eventos['player'] == jogadorB]
