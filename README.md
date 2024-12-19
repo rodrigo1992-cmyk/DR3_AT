@@ -24,12 +24,14 @@ Para isto foram utilizados:
 
 ## Exemplos de entrada e saída das funcionalidades.
 Foram criados dois diagramas, um com a arquitetura em alto nível (HLD), e outro com a arquitetura detalhada (LLD) contendo a descrição de todas as funções declaradas. Favor consultar os PDFs para visualização em resolução adequada.
-- docs\arquitetura_HLD.pdf
-- docs\arquitetura_LLD.pdf
+- docs\arquitetura_HLD.png
+- docs\arquitetura_LLD.png
 
 
-**Snapshot do diagrama LLD:**
+### Snapshot do diagrama LLD:
+
 ![alt text](docs/image.png)
 
-**Snapshot do diagrama HLD:**
+### Snapshot do diagrama HLD:
+
 ![alt text](docs/image-1.png)
