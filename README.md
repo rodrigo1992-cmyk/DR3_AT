@@ -29,7 +29,7 @@ Foram criados dois diagramas, um com a arquitetura em alto nível (HLD), e outro
 
 
 **Snapshot do diagrama LLD:**
-![alt text](image.png)
+![alt text](docs/image.png)
 
 **Snapshot do diagrama HLD:**
-![alt text](image-1.png)
+![alt text](docs/image-1.png)
