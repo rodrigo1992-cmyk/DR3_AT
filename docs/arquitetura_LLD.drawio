@@ -1,11 +1,11 @@
 <mxfile host="65bd71144e">
     <diagram id="QdpAEqe0KQ9zSXsOPeXD" name="Página-1">
-        <mxGraphModel dx="6073" dy="3763" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="8003" dy="4039" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="11" value="app/services" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-4532" y="-2446" width="3383" height="684" as="geometry"/>
+                    <mxGeometry x="-4532" y="-2446" width="3025" height="684" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="Backend" style="swimlane;whiteSpace=wrap;html=1;verticalAlign=top;" parent="11" vertex="1">
                     <mxGeometry x="39" y="9.25" width="1064" height="461" as="geometry"/>
@@ -16,8 +16,13 @@
                 <mxCell id="10" value="back_main.py&lt;br&gt;Contém algumas funções de tratamento de bases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=4;verticalAlign=top;align=left;" parent="15" vertex="1">
                     <mxGeometry x="8" y="38.5" width="209" height="422.5" as="geometry"/>
                 </mxCell>
+                <mxCell id="186" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=12;fontColor=#80001a;" edge="1" parent="15" source="47" target="45">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="234" y="294.75" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
                 <mxCell id="41" value="df_main_events_pre_processing&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Realiza um pré tratamento de dados no dataframe &quot;events&quot;.&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Parâmetros:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;df_events:&amp;nbsp; DataFrame com os eventos de uma partida&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Output:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;df_main_events: DataFrame&amp;nbsp;&lt;/div&gt;filtrado e t&lt;span style=&quot;background-color: initial;&quot;&gt;ratado&amp;nbsp;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
-                    <mxGeometry x="17" y="92.5" width="181" height="161.5" as="geometry"/>
+                    <mxGeometry x="26" y="278.75" width="181" height="161.5" as="geometry"/>
                 </mxCell>
                 <mxCell id="43" value="create_tools&lt;br&gt;Instancia as ferramentas:&lt;br&gt;&amp;nbsp;match_summarizer.&amp;nbsp;match_stats e match_lineup&lt;br&gt;&lt;br&gt;&lt;div&gt;Inputs: match_id, home_team, away_team, user_input, df&lt;/div&gt;&lt;div&gt;Output: Lista de ferramentas.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
                     <mxGeometry x="320" y="91" width="232" height="95.25" as="geometry"/>
@@ -25,11 +30,11 @@
                 <mxCell id="57" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" parent="15" source="44" target="56">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_summarizer&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Função intermediária para chamar o modelo. Ela passa os dados de cada tempo da partida separado, pois o modelo performou melhor assim.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
+                <mxCell id="44" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_summarizer&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Função intermediária para chamar o modelo. Ela passa os dados de cada tempo da partida separado, pois o modelo performou melhor assim.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#93F5E8;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
                     <mxGeometry x="651" y="83.75" width="166" height="83.5" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="get_lineup&lt;div style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Obtem o dataframe &quot;lineups&quot; e ajusta o formato da tabela para que possa ser passada a relação de jogadores para o modelo de LLM.&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Parâmetros:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;match_id, home_team, away_team&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Output:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;string estruturada no formato de um json.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
-                    <mxGeometry x="13" y="273.5" width="189" height="161.5" as="geometry"/>
+                <mxCell id="45" value="get_lineup&lt;div style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Obtem o dataframe &quot;lineups&quot; e ajusta o formato da tabela para que possa ser passada a relação de jogadores para o modelo de LLM.&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Parâmetros:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;match_id, home_team, away_team&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;Output:&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;string estruturada no formato de um json.&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#93F5E8;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
+                    <mxGeometry x="22" y="91" width="189" height="161.5" as="geometry"/>
                 </mxCell>
                 <mxCell id="49" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="15" source="46" target="47">
                     <mxGeometry relative="1" as="geometry"/>
@@ -46,25 +51,11 @@
                 <mxCell id="58" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="15" source="47" target="52">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="59" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="15" source="47" target="53">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="47" value="instance_agent&lt;br style=&quot;font-size: 10px;&quot;&gt;Agente reAct customizado para realizar a consolidação dos resultados das Tools e adequação ao tom solicitado pelo usuário.&lt;br&gt;&lt;br&gt;Inputs:&amp;nbsp;match_id, home_team, away_team, llm_tone, user_input, df_main_events&lt;br&gt;&lt;br&gt;Output: modelo instanciado" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
+                <mxCell id="47" value="instance_agent&lt;br style=&quot;font-size: 10px;&quot;&gt;Agente reAct customizado para realizar a consolidação dos resultados das Tools e adequação ao tom solicitado pelo usuário.&lt;br&gt;&lt;br&gt;Inputs:&amp;nbsp;match_id, home_team, away_team, llm_tone, user_input, df_main_events&lt;br&gt;&lt;br&gt;Output: modelo instanciado" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#eea5a5;fontColor=#333333;strokeColor=#666666;fontSize=10;" vertex="1" parent="15">
                     <mxGeometry x="320" y="211.75" width="228" height="123.75" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_stats&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Modelo preparado para responder perguntas sobre as estatísticas dos times ou jogadores&amp;nbsp;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
-                    <mxGeometry x="649" y="188.75" width="337" height="68.25" as="geometry"/>
-                </mxCell>
-                <mxCell id="175" style="edgeStyle=orthogonalEdgeStyle;html=1;fontFamily=Helvetica;fontSize=12;fontColor=#80001a;" edge="1" parent="15" source="53" target="45">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="601" y="309"/>
-                            <mxPoint x="601" y="354"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="53" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_lineup&lt;br&gt;Função para obter a lista dos jogadores da partida&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
-                    <mxGeometry x="649" y="275.75" width="341" height="66.25" as="geometry"/>
+                <mxCell id="52" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_stats&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Modelo preparado para responder perguntas sobre as estatísticas dos times ou jogadores&amp;nbsp;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#93F5E8;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
+                    <mxGeometry x="665" y="221.75" width="337" height="68.25" as="geometry"/>
                 </mxCell>
                 <mxCell id="56" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;match_summarizer&lt;br&gt;Modelo que recebe o dataframe e realiza e cria um resumo narrativo sobre a partida&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;verticalAlign=top;align=left;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="15">
                     <mxGeometry x="848" y="83.75" width="166" height="83.5" as="geometry"/>
@@ -245,10 +236,12 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="37" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1.001;entryY=0.561;entryDx=0;entryDy=0;startArrow=none;startFill=0;entryPerimeter=0;" parent="1" source="63" target="41" edge="1">
+                <mxCell id="37" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=none;startFill=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="63" target="41" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="-4231" y="-2254"/>
+                            <mxPoint x="-4231" y="-1869"/>
+                            <mxPoint x="-4376" y="-1869"/>
+                            <mxPoint x="-4376" y="-1996"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>

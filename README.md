@@ -23,7 +23,13 @@ Para isto foram utilizados:
 - **Front-end**: Acessar a pasta app/services e executar o comando *"python -m streamlit run front_main.py --server.port=8081 --browser.serverAddress='177.192.12.238'"*
 
 ## Exemplos de entrada e saída das funcionalidades.
-A aplicação está divida conforme arquitetura abaixo:
+Foram criados dois diagramas, um com a arquitetura em alto nível (HLD), e outro com a arquitetura detalhada (LLD) contendo a descrição de todas as funções declaradas. Favor consultar os PDFs para visualização em resolução adequada.
+- docs\arquitetura_HLD.pdf
+- docs\arquitetura_LLD.pdf
 
 
+**Snapshot do diagrama LLD:**
+![alt text](image.png)
 
+**Snapshot do diagrama HLD:**
+![alt text](image-1.png)
